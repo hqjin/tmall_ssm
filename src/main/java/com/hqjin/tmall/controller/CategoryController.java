@@ -1,5 +1,7 @@
 package com.hqjin.tmall.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hqjin.tmall.pojo.Category;
 import com.hqjin.tmall.service.CategoryService;
 import com.hqjin.tmall.util.ImageUtil;
@@ -26,9 +28,10 @@ public class CategoryController {
     CategoryService categoryService;
     @RequestMapping("admin_category_list")
     public String list(Model model,Page page){
-        List<Category> cs=categoryService.list(page);//初始的Page的start=0,count=0,total=0
-        page.setTotal(categoryService.total());
-        System.out.println("id="+cs.get(cs.size()-1).getId()+"; name="+cs.get(cs.size()-1).getName());
+        PageHelper.offsetPage(page.getStart(),page.getCount());
+        List<Category> cs=categoryService.list();//初始的Page的start=0,count=0,total=0
+        int total=(int)new PageInfo<>(cs).getTotal();
+        page.setTotal(total);
         model.addAttribute("cs",cs);
         model.addAttribute("page",page);
         return "admin/listCategory";

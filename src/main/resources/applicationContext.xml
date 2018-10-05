@@ -46,7 +46,6 @@
         <property name="typeAliasesPackage" value="com.hqjin.tmall.pojo"/>
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
-        <!--用于日后使用的分页插件
         <property name="plugins">
             <array>
                 <bean class="com.github.pagehelper.PageInterceptor">
@@ -58,7 +57,6 @@
                 </bean>
             </array>
         </property>
-        -->
     </bean>
     <!--mybatis的识别文件-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">

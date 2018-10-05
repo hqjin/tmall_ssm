@@ -5,12 +5,6 @@
 <mapper namespace="com.hqjin.tmall.mapper.CategoryMapper">
     <select id="list" resultType="Category">
         select * from category order by id desc
-        <if test="start!=null and count!=null">
-            limit #{start},#{count}
-        </if>
-    </select>
-    <select id="total" resultType="int">
-        select count(*) from category
     </select>
     <!--Category中新增条目会使id值自动增长，此时需要更新Category对象上的该属性：-->
     <!--犯错：漏了keyProperty使id值无法更新而成了0-->
