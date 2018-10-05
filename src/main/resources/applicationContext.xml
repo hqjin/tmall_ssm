@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <context:annotation-config/>
+    <context:component-scan base-package="com.hqjin.tmall.service"/>
+    <!--导入数据库配置文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--配置数据库连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <!--基本属性-->
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/><!--原来是属性文件中password的单词打错了-->
+        
+        <!--初始化大小-->
+        <property name="initialSize" value="1"/>
+        <property name="minIdle" value="1"/>
+        <property name="maxActive" value="20"/>
+
+        <!--超时时间-->
+        <property name="maxWait" value="60000"/>
+
+        <!--间隔使用时间-->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+
+        <!--最小生存时间-->
+        <property name="minEvictableIdleTimeMillis" value="30000"/>
+
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        
+        <!--打开并指定PSCache大小-->
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+
+    </bean>
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="typeAliasesPackage" value="com.hqjin.tmall.pojo"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <!--用于日后使用的分页插件
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <value>
+
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+        -->
+    </bean>
+    <!--mybatis的识别文件-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hqjin.tmall.mapper"/>
+    </bean>
+
+</beans>
