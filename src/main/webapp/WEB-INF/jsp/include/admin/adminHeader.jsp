@@ -17,7 +17,7 @@ function checkEmpty(id, name){
 	var value = $("#"+id).val();
 	if(value.length==0){
 		alert(name+ "不能为空");
-		$("#"+id)[0].focus();
+		$("#"+id)[0].focus();//为空，则聚焦在alert窗口上。但此时表单不能提交？
 		return false;
 	}
 	return true;
@@ -54,7 +54,7 @@ function checkInt(id, name){
 }
 
 
-$(function(){
+$(function(){//对每一个删除操作都进行了监听，确认后，点击动作才生效。id “a”表示所有项？？
 	$("a").click(function(){
 		var deleteLink = $(this).attr("deleteLink");
 		console.log(deleteLink);

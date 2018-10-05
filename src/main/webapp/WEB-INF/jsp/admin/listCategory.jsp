@@ -6,14 +6,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <!--contentType中，";"后面连一个空格也不能多或少-->
-<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="utf-8" import="java.util.*" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" import="java.util.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@include file="../include/admin/adminHeader.jsp"%>
 <%@include file="../include/admin/adminNavigator.jsp"%>
 <script>
     $(function () {
         $("#addForm").submit(function () {
-            if(!checkEmpty("name","分类名称"))
+            if(!checkEmpty("name","分类名称"))//对本文末尾处的Form的id为“name”和“categoryPic”的两行进行判断，为空则错误。
                 return false;
             if(!checkEmpty("categoryPic","分类图片"))
                 return false;
@@ -45,13 +45,14 @@
                         <td>${c.id}</td>
                         <td><img src="img/category/${c.id}.jpg" height="40px"></td>
                         <td>${c.name}</td>
-                        <td><a href="admin_property_list?cid=${c.id}">
+                        <td><a href="admin_property_list?id=${c.id}">
                             <span class="glyphicon glyphicon-th-list"> </span> </a> </td>
-                        <td><a href="admin_product_list?cid=${c.id}">
+                        <td><a href="admin_product_list?id=${c.id}">
                             <span class="glyphicon glyphicon-shopping-cart"></span></a> </td>
-                        <td><a href="admin_category_edit?cid=${c.id}">
+                        <td><a href="admin_category_edit?id=${c.id}">
                             <span class="glyphicon glyphicon-edit"></span> </a> </td>
-                        <td><a deleteLink="true" href="admin_category_delete?cid=${c.id}">
+                        <!--犯错：此处参数应为“id”，而不是“cid”,以前记差了-->
+                        <td><a deleteLink="true" href="admin_category_delete?id=${c.id}">
                             <span class="glyphicon glyphicon-trash"></span> </a> </td>
                     </tr>
                 </c:forEach>
@@ -59,7 +60,7 @@
         </table>
     </div>
     <div class="pageDiv">
-        <%//@include file="../include/admin/adminPage.jsp"//暂时先不分页%>
+        <%@include file="../include/admin/adminPage.jsp"%>
     </div>
     <div class="panel panel-warning addDiv">
         <div class="panel-heading">新增分类 </div>
