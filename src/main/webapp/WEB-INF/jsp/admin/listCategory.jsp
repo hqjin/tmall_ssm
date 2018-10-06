@@ -45,13 +45,13 @@
                         <td>${c.id}</td>
                         <td><img src="img/category/${c.id}.jpg" height="40px"></td>
                         <td>${c.name}</td>
-                        <td><a href="admin_property_list?id=${c.id}">
+                        <td><a href="admin_property_list?cid=${c.id}">
                             <span class="glyphicon glyphicon-th-list"> </span> </a> </td>
-                        <td><a href="admin_product_list?id=${c.id}">
+                        <td><a href="admin_product_list?cid=${c.id}">
                             <span class="glyphicon glyphicon-shopping-cart"></span></a> </td>
+                        <!--犯错：对category的页面来说，其参数为id；但对product，property页面，其参数是cid-->
                         <td><a href="admin_category_edit?id=${c.id}">
                             <span class="glyphicon glyphicon-edit"></span> </a> </td>
-                        <!--犯错：此处参数应为“id”，而不是“cid”,以前记差了-->
                         <td><a deleteLink="true" href="admin_category_delete?id=${c.id}">
                             <span class="glyphicon glyphicon-trash"></span> </a> </td>
                     </tr>

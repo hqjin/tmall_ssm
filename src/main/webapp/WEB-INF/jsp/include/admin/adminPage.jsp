@@ -9,6 +9,7 @@
 <nav>
     <ul class="pagination">
         <li <c:if test="${!page.hasPrevious}">class="disabled"</c:if>>
+            <!--page的param额外导入其他所需参数（如以“&cid=”的形式）-->
             <a href="?start=0${page.param}" aria-label="Previous"。>
                <span aria-hidden="true">«</span>
             </a>

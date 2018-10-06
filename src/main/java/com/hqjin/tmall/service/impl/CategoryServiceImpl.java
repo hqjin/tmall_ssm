@@ -1,6 +1,7 @@
 package com.hqjin.tmall.service.impl;
 import com.hqjin.tmall.pojo.Category;
 import com.hqjin.tmall.mapper.CategoryMapper;
+import com.hqjin.tmall.pojo.CategoryExample;
 import com.hqjin.tmall.service.CategoryService;
 import com.hqjin.tmall.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,22 +15,24 @@ public class CategoryServiceImpl implements CategoryService{
     CategoryMapper categoryMapper;
     @Override
     public List<Category> list(){
-        return categoryMapper.list();
+        CategoryExample example=new CategoryExample();
+        example.setOrderByClause("id desc");
+        return categoryMapper.selectByExample(example);
     }
     @Override
     public void add(Category category){
-        categoryMapper.add(category);
+        categoryMapper.insert(category);
     }
     @Override
     public void delete(int id){
-        categoryMapper.delete(id);
+        categoryMapper.deleteByPrimaryKey(id);
     }
     @Override
     public Category get(int id){
-        return categoryMapper.get(id);
+        return categoryMapper.selectByPrimaryKey(id);
     }
     @Override
     public void update(Category category){
-        categoryMapper.update(category);
+        categoryMapper.updateByPrimaryKeySelective(category);//不懂？？
     }
 }
