@@ -21,6 +21,17 @@ public class Product {
 
     private Category category;
 
+    private ProductImage firstProductImage;
+
+    public ProductImage getFirstProductImage(){
+        return firstProductImage;
+    }
+
+    public void setFirstProductImage(ProductImage productImage){
+        //犯错：找了还久的bug！此处的“productImage”误命名为“firsProductImage”!
+        firstProductImage=productImage;
+    }
+
     public Category getCategory() {
         return category;
     }

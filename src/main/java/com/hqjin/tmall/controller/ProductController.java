@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.jws.WebParam;
 import java.util.Date;
 import java.util.List;
 
@@ -31,14 +30,14 @@ public class ProductController {
     }
     @RequestMapping("admin_product_delete")
     public String delete(int id){
-        Product p=productService.delete(id);
+        productService.delete(id);
         return "redirect:admin_product_list?cid="+productService.get(id).getCid();
     }
     @RequestMapping("admin_product_edit")
     //点击了edit按钮后，由id号得出property实例，并设置Category，加入Model中，再在服务端跳转至编辑页面
     public String edit(Model model,int id){
         Product p=productService.get(id);
-        p.setCategory(categoryService(p.getCid()));
+        p.setCategory(categoryService.get(p.getCid()));
         model.addAttribute("p",p);
         return "admin/editProduct";
     }
