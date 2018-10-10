@@ -10,6 +10,16 @@ public class OrderItem {
     private Integer uid;
 
     private Integer number;
+    //因为在订单管理页面需要看到订单下面的订单项里的产品图片，所以需要加入Prduct
+    private Product product;
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product){
+        this.product=product;
+    }
 
     public Integer getId() {
         return id;
