@@ -74,7 +74,7 @@
                                             <span>${oi.product.name}</span>
                                         </a> </td>
                                         <td align="right"><span class="text-muted">${oi.number}个</span></td>
-                                        <td align="right"><span class="text-muted">单价：￥${oi.product.promoterPrice}</span> </td>
+                                        <td align="right"><span class="text-muted">单价：￥${oi.product.promotePrice}</span> </td>
                                     </tr>
                                 </c:forEach>
                             </table>

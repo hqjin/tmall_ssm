@@ -19,8 +19,8 @@
             //犯错：originalPrice的拼写错误
             if(!checkNumber("originalPrice","原价格"))
                 return false;
-            //犯错：promoterPrice拼写错误
-            if(!checkNumber("promoterPrice","优惠价格"))
+            //犯错：promotePrice拼写错误
+            if(!checkNumber("promotePrice","优惠价格"))
                 return false;
             if(!checkInt("stock","库存"))
                 return false;
@@ -62,8 +62,8 @@
                         </tr>
                         <tr>
                             <td>产品优惠价格</td>
-                            <td><input id="promoterPrice" name="promoterPrice" type="text"
-                                        value="${p.promoterPrice}" class="from-control"></td>
+                            <td><input id="promotePrice" name="promotePrice" type="text"
+                                        value="${p.promotePrice}" class="from-control"></td>
                         </tr>
                         <tr>
                             <td>库存</td>

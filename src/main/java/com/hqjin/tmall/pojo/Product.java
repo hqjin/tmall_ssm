@@ -11,7 +11,7 @@ public class Product {
 
     private Float originalPrice;
 
-    private Float promoterPrice;
+    private Float promotePrice;
 
     private Integer stock;
 
@@ -72,12 +72,12 @@ public class Product {
         this.originalPrice = originalPrice;
     }
 
-    public Float getPromoterPrice() {
-        return promoterPrice;
+    public Float getPromotePrice() {
+        return promotePrice;
     }
 
-    public void setPromoterPrice(Float promoterPrice) {
-        this.promoterPrice = promoterPrice;
+    public void setPromotePrice(Float promotePrice) {
+        this.promotePrice = promotePrice;
     }
 
     public Integer getStock() {

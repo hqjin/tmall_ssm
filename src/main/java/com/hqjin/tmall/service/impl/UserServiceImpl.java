@@ -35,4 +35,22 @@ public class UserServiceImpl implements UserService{
     public void update(User u){
         userMapper.updateByPrimaryKeySelective(u);
     }
+
+    @Override
+    public boolean isExist(String name) {
+        UserExample example=new UserExample();
+        example.createCriteria().andNameEqualTo(name);
+        List<User> us=userMapper.selectByExample(example);
+        if(us.isEmpty())return false;
+        return true;
+    }
+
+    @Override
+    public User getUser(String name, String password) {
+        UserExample example=new UserExample();
+        example.createCriteria().andNameEqualTo(name).andPasswordEqualTo(password);
+        List<User> us=userMapper.selectByExample(example);
+        if(us.isEmpty())return null;
+        else return us.get(0);
+    }
 }

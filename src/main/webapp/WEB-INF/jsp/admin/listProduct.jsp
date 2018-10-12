@@ -18,7 +18,7 @@
         //        return false;
             if(!checkNumber("originalPrice","原价格"))
                 return false;
-            if(!checkNumber("promoterPrice","优惠价格"))
+            if(!checkNumber("promotePrice","优惠价格"))
                 return false;
             if(!checkInt("stock","库存"))
                 return false;
@@ -67,7 +67,7 @@
                         <td>${p.name}</td>
                         <td>${p.subTitle}</td>
                         <td>${p.originalPrice}</td>
-                        <td>${p.promoterPrice}</td>
+                        <td>${p.promotePrice}</td>
                         <td>${p.stock}</td>
                         <td><a href="admin_productImage_list?pid=${p.id}">
                             <span class="glyphicon glyphicon-picture"></span>
@@ -109,7 +109,7 @@
                         </tr>
                         <tr>
                             <td>优惠价格</td>
-                            <td><input id="promoterPrice" name="promoterPrice"
+                            <td><input id="promotePrice" name="promotePrice"
                                         value="19.98" class="form-control"></td>
                         </tr>
                         <tr>

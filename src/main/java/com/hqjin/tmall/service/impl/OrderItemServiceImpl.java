@@ -58,7 +58,7 @@ public class OrderItemServiceImpl implements OrderItemService{
         float total=0;
         int number=0;
         for(OrderItem oi:ois){
-            total+=oi.getNumber()*(oi.getProduct().getPromoterPrice());
+            total+=oi.getNumber()*(oi.getProduct().getPromotePrice());
             number+=oi.getNumber();
         }
         order.setTotal(total);

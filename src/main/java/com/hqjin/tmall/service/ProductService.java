@@ -1,5 +1,6 @@
 package com.hqjin.tmall.service;
 
+import com.hqjin.tmall.pojo.Category;
 import com.hqjin.tmall.pojo.Product;
 
 import java.util.List;
@@ -11,4 +12,7 @@ public interface ProductService {
     List<Product> list(int cid);
     Product get(int id);
     void setFirstProductImage(Product p);
+    void fill(Category category);
+    void fill(List<Category> categories);
+    void fillByRow(List<Category> categories);
 }
