@@ -268,4 +268,62 @@ public class ForeController {
          model.addAttribute("total",totalPrice);
          return "fore/buy";
      }
+    /**
+     * addCart()方法和立即购买中的 ForeController.buyone()步骤做的事情是一样的，区别在于返回不一样
+     1. 获取参数pid
+     2. 获取参数num
+     3. 根据pid获取产品对象p
+     4. 从session中获取用户对象user
+
+     接下来就是新增订单项OrderItem， 新增订单项要考虑两个情况
+     a. 如果已经存在这个产品对应的OrderItem，并且还没有生成订单，即还在购物车中。 那么就应该在对应的OrderItem基础上，调整数量
+     a.1 基于用户对象user，查询没有生成订单的订单项集合
+     a.2 遍历这个集合
+     a.3 如果产品是一样的话，就进行数量追加
+     a.4 获取这个订单项的 id
+
+     b. 如果不存在对应的OrderItem,那么就新增一个订单项OrderItem
+     b.1 生成新的订单项
+     b.2 设置数量，用户和产品
+     b.3 插入到数据库
+     b.4 获取这个订单项的 id*/
+    @RequestMapping("foreaddCart")
+    @ResponseBody
+    public String addCart(Model model,@RequestParam("pid")int pid,@RequestParam("num")int num,HttpSession session){
+        User user=(User)session.getAttribute("user");
+        Product p=productService.get(pid);
+        List<OrderItem> ois=orderItemService.listByUser(user.getId());
+        for(OrderItem oi:ois){
+            if(oi.getPid().intValue()==pid&&oi.getOid()==null){
+                oi.setNumber(oi.getNumber()+num);
+                orderItemService.update(oi);
+                int oiid=oi.getId();
+                model.addAttribute("oiid",oiid);
+                return "success";
+            }
+        }
+        OrderItem oi=new OrderItem();
+        oi.setNumber(num);
+        oi.setProduct(p);
+        oi.setUid(user.getId());
+        oi.setPid(pid);
+        orderItemService.add(oi);
+        int oiid=oi.getId();
+        //看起来并不需要oiid这个参数
+        model.addAttribute("oiid",oiid);
+        return "success";
+    }
+    /**1. 通过session获取当前用户
+     所以一定要登录才访问，否则拿不到用户对象,会报错
+     2. 获取为这个用户关联的订单项集合 ois
+     3. 把ois放在model中
+     4. 服务端跳转到cart.jsp*/
+    @RequestMapping("forecart")
+    public String cart(HttpSession session,Model model){
+        User user=(User) session.getAttribute("user");
+        List<OrderItem> ois=orderItemService.listByUser(user.getId());
+        //？？不需要排除已经生成了订单的订单项？？
+        model.addAttribute("ois",ois);
+        return "fore/cart";
+    }
 }
