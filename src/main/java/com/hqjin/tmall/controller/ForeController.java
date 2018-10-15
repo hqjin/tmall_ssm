@@ -326,4 +326,37 @@ public class ForeController {
         model.addAttribute("ois",ois);
         return "fore/cart";
     }
+    /**1. 判断用户是否登录
+     2. 获取pid和number
+     3. 遍历出用户当前所有的未生成订单的OrderItem
+     4. 根据pid找到匹配的OrderItem，并修改数量后更新到数据库
+     5. 返回字符串"success"*/
+    @RequestMapping("forechangeOrderItem")
+    @ResponseBody
+    public String changeOrderItem(@RequestParam("pid")int pid,@RequestParam("number")int number,HttpSession session){
+        User user=(User) session.getAttribute("user");
+        System.out.println("number="+number);
+        List<OrderItem> ois=orderItemService.listByUser(user.getId());
+        for(OrderItem oi:ois){
+            if(oi.getOid()==null&&oi.getPid()==pid){
+                oi.setNumber(number);
+                orderItemService.update(oi);
+                return "success";
+            }
+        }
+        return "fail";
+    }
+    /**1. 判断用户是否登录
+     2. 获取oiid
+     3. 删除oiid对应的OrderItem数据
+     4. 返回字符串"success"*/
+    @RequestMapping("foredeleteOrderItem")
+    @ResponseBody
+    public String deleteOrderItem(@RequestParam("oiid")int oiid,HttpSession session){
+        if(session.getAttribute("user")!=null){
+            orderItemService.delete(oiid);
+            return "success";
+        }
+        return "fail";
+    }
 }

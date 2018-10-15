@@ -42,7 +42,7 @@
             if("selectit"==selectit){
                 $(this).attr("src","img/site/cartNotSelected.png");
                 $(this).attr("selectit","false")
-                $(this).parents("tr.cartProductItemTR").css("/background-color","#fff");
+                $(this).parents("tr.cartProductItemTR").css("background-color","#fff");
             }
             else{
                 $(this).attr("src","img/site/cartSelected.png");
@@ -51,7 +51,8 @@
             }
             syncSelect();
             syncCreateOrderButton();
-            calcCartSumPriceAndN/umber();
+            //犯错：在函数名中莫名插入了一个“/”
+            calcCartSumPriceAndNumber();
         });
         $("img.selectAllItem").click(function(){
             var selectit = $(this).attr("selectit")
@@ -188,6 +189,7 @@
     }
     function syncPrice(pid,num,price){
         $(".orderItemNumberSetting[pid="+pid+"]").val(num);
+        //犯错：formatMoney函数写错(把除号写成了乘号)，导致最后计算结果出错。
         var cartProductItemSmallSumPrice = formatMoney(num*price);
         $(".cartProductItemSmallSumPrice[pid="+pid+"]").html("￥"+cartProductItemSmallSumPrice);
         calcCartSumPriceAndNumber();
@@ -254,7 +256,8 @@
                             <span class="hidden orderItemStock" pid="${oi.pid}">${oi.product.stock}</span>
                             <span class="hidden orderItemPromotePrice" pid="${oi.pid}">${oi.product.promotePrice}</span>
                             <a href="#nowhere" class="numberMinus" pid="${oi.pid}">-</a>
-                            <input value="${oi.number}" autocomplete="off" pid="${p.id}" oiid="${oi.id}" class="orderItemValueSetting">
+                            <!--犯错：页面显示不正确，找了好久的错，仅仅是因为这个input的class写错了;同时pid的表达式写成了“p.id”-->
+                            <input value="${oi.number}" autocomplete="off" pid="${oi.pid}" oiid="${oi.id}" class="orderItemNumberSetting">
                             <a href="#nowhere" class="numberPlus" stock="${oi.product.stock}" pid="${oi.pid}">+</a>
                         </div>
                     </td>

@@ -39,10 +39,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
         String contextPath=session.getServletContext().getContextPath();
         String uri=request.getRequestURI();
         uri= StringUtils.remove(uri,contextPath);
-        System.out.println("uri="+uri);
         if(uri.startsWith("/fore"))
             uri=StringUtils.substringAfterLast(uri,"/fore");
-        System.out.println("uri="+uri);
         if(user==null&&!Arrays.asList(noNeedAuthPage).contains(uri)){
             response.sendRedirect("loginPage");
             return false;

@@ -34,6 +34,10 @@
             <mvc:mapping path="/fore*"/>
             <bean class="com.hqjin.tmall.interceptor.LoginInterceptor"></bean>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/fore*"/>
+            <bean class="com.hqjin.tmall.interceptor.OtherInterceptor"></bean>
+        </mvc:interceptor>
     </mvc:interceptors>
 
 </beans>
