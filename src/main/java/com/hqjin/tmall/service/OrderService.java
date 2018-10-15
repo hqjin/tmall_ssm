@@ -1,6 +1,7 @@
 package com.hqjin.tmall.service;
 
 import com.hqjin.tmall.pojo.Order;
+import com.hqjin.tmall.pojo.OrderItem;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ public interface OrderService {
     void update(Order order);
     Order get(int id);
     List<Order> list();
+    float add(Order o, List<OrderItem> ois);
 }
