@@ -1,15 +1,13 @@
 package com.hqjin.tmall.service.impl;
 
 import com.hqjin.tmall.mapper.OrderItemMapper;
-import com.hqjin.tmall.pojo.Order;
-import com.hqjin.tmall.pojo.OrderItem;
-import com.hqjin.tmall.pojo.OrderItemExample;
-import com.hqjin.tmall.pojo.Product;
+import com.hqjin.tmall.pojo.*;
 import com.hqjin.tmall.service.OrderItemService;
 import com.hqjin.tmall.service.ProductService;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.security.x509.OIDMap;
 
 import java.util.List;
 
@@ -33,7 +31,9 @@ public class OrderItemServiceImpl implements OrderItemService{
     }
     @Override
     public OrderItem get(int id){
-        return orderItemMapper.selectByPrimaryKey(id);
+        OrderItem oi=orderItemMapper.selectByPrimaryKey(id);
+        setProduct(oi);
+        return oi;
     }
     @Override
     public List<OrderItem> list(){
@@ -74,8 +74,35 @@ public class OrderItemServiceImpl implements OrderItemService{
 
     public void setProduct(List<OrderItem> ois){
         for(OrderItem oi:ois){
-            Product p=productService.get(oi.getPid());
-            oi.setProduct(p);
+            setProduct(oi);
         }
+    }
+    public void setProduct(OrderItem oi){
+        Product p=productService.get(oi.getPid());
+        oi.setProduct(p);
+    }
+
+    //仅仅是模拟：根据所有用户订单项中的某产品的数量，来确定其销售量
+    @Override
+    public int getSaleCount(int pid) {
+        OrderItemExample example=new OrderItemExample();
+        example.createCriteria().andPidEqualTo(pid);
+        List<OrderItem> ois=orderItemMapper.selectByExample(example);
+        int result=0;
+        for(OrderItem oi:ois){
+            result+=oi.getNumber();
+        }
+        return result;
+    }
+
+    @Override
+    public List<OrderItem> listByUser(int uid) {
+        OrderItemExample example=new OrderItemExample();
+        example.createCriteria().andUidEqualTo(uid).andOidIsNull();
+        example.setOrderByClause("id desc");
+        List<OrderItem> ois=orderItemMapper.selectByExample(example);
+        //一个orderItem只对应一个产品
+        setProduct(ois);
+        return ois;
     }
 }

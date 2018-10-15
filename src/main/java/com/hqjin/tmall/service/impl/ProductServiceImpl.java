@@ -6,9 +6,7 @@ import com.hqjin.tmall.pojo.Category;
 import com.hqjin.tmall.pojo.Product;
 import com.hqjin.tmall.pojo.ProductExample;
 import com.hqjin.tmall.pojo.ProductImage;
-import com.hqjin.tmall.service.CategoryService;
-import com.hqjin.tmall.service.ProductImageService;
-import com.hqjin.tmall.service.ProductService;
+import com.hqjin.tmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +20,10 @@ public class ProductServiceImpl implements ProductService{
     CategoryService categoryService;
     @Autowired
     ProductImageService productImageService;
+    @Autowired
+    OrderItemService orderItemService;
+    @Autowired
+    ReviewService reviewService;
     @Override
     public void add(Product product){
         productMapper.insert(product);
@@ -101,5 +103,31 @@ public class ProductServiceImpl implements ProductService{
             }
             c.setProductsByRow(productsByRow);
         }
+    }
+
+    @Override
+    public void setSaleAndReviewNumber(List<Product> ps) {
+        for(Product p:ps){
+            setSaleAndReviewNumber(p);
+        }
+    }
+
+    @Override
+    public void setSaleAndReviewNumber(Product p) {
+        p.setSaleCount(orderItemService.getSaleCount(p.getId()));
+        p.setReviewCount(reviewService.getCount(p.getId()));
+    }
+
+    @Override
+    public List<Product> search(String keyword) {
+        ProductExample example=new ProductExample();
+        //犯错：少了两个百分号
+        example.createCriteria().andNameLike("%"+keyword+"%");
+        example.setOrderByClause("id desc");
+        List<Product> ps=productMapper.selectByExample(example);
+        setSaleAndReviewNumber(ps);
+        setFirstProductImage(ps);
+        setCategory(ps);
+        return ps;
     }
 }

@@ -13,4 +13,7 @@ public interface OrderItemService {
     List<OrderItem> list();
     void fill(Order order);
     void fill(List<Order> orders);
+    //增加根据产品获取销售量的方法
+    int getSaleCount(int pid);
+    List<OrderItem> listByUser(int uid);
 }

@@ -30,4 +30,15 @@ public class User {
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
     }
+    //获取匿名
+    public String getAnonymousName(){
+        if(name==null)return null;
+        if(name.length()<=1)return "*";
+        if(name.length()==2)return name.substring(0,1)+"*";
+        char[] array=name.toCharArray();
+        for(int i=1;i<array.length-1;i++){//倒数第一个不是‘*’
+            array[i]='*';
+        }
+        return new String(array);
+    }
 }
