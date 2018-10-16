@@ -5,6 +5,7 @@ import com.hqjin.tmall.comparator.*;
 import com.hqjin.tmall.pojo.*;
 import com.hqjin.tmall.service.*;
 import org.apache.commons.lang.math.RandomUtils;
+import org.aspectj.weaver.patterns.OrSignaturePattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.jws.WebParam;
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpSession;
 import java.awt.image.ColorModel;
 import java.text.SimpleDateFormat;
@@ -128,7 +130,8 @@ public class ForeController {
         productService.setSaleAndReviewNumber(p);
         model.addAttribute("p",p);
         model.addAttribute("pvs",pvs);
-        model.addAttribute("rs",rs);
+        //犯错：reviews 的参数名取成了“rs”，导致jsp无法识别
+        model.addAttribute("reviews",rs);
         return "fore/product";
     }
     @RequestMapping("forecheckLogin")
@@ -401,5 +404,111 @@ public class ForeController {
         orderService.update(o);
         model.addAttribute("o",o);
         return "fore/payed";
+    }
+    /**1. 通过session获取用户user
+     2. 查询user所有的状态不是"delete" 的订单集合os
+     3. 为这些订单填充订单项
+     4. 把os放在model的属性"os"上
+     5. 服务端跳转到bought.jsp*/
+    @RequestMapping("forebought")
+    public String bought(HttpSession session,Model model){
+        User user=(User)session.getAttribute("user");
+        List<Order> os=orderService.list(user.getId(),OrderService.delete);
+        orderItemService.fill(os);
+        model.addAttribute("os",os);
+        return "fore/bought";
+    }
+    /**1. 点击确认收货后，访问地址/foreconfirmPay
+     2. ForeController.confirmPay()方法被调用
+     2.1 获取参数oid
+     2.2 通过oid获取订单对象o
+     2.3 为订单对象填充订单项
+     2.4 把订单对象放在request的属性"o"上
+     2.5 服务端跳转到 confirmPay.jsp*/
+    @RequestMapping("foreconfirmPay")
+    public String comfirmPay(int oid,Model model){
+        Order o=orderService.get(oid);
+        orderItemService.fill(o);
+        model.addAttribute("o",o);
+        return "fore/confirmPay";
+    }
+    /**1. ForeController.orderConfirmed() 方法
+     1.1 获取参数oid
+     1.2 根据参数oid获取Order对象o
+     1.3 修改对象o的状态为等待评价，修改其确认支付时间
+     1.4 更新到数据库
+     1.5 服务端跳转到orderConfirmed.jsp页面*/
+    @RequestMapping("foreorderConfirmed")
+    public String orderConfirmed(int oid){
+        Order o=orderService.get(oid);
+        o.setStatus(OrderService.waitReview);
+        o.setConfirmDate(new Date());
+        orderService.update(o);
+        return "fore/orderConfirmed";
+    }
+    /**1. ForeController.deleteOrder()
+     1.1 获取参数oid
+     1.2 根据oid获取订单对象o
+     1.3 修改状态
+     1.4 更新到数据库
+     1.5 返回字符串"success"*/
+    public String deleteOrder(int oid){
+        Order o=orderService.get(oid);
+        o.setStatus(OrderService.delete);
+        orderService.update(o);
+        return "success";
+    }
+    /**1. ForeController.review()
+     1.1 获取参数oid
+     1.2 根据oid获取订单对象o
+     1.3 为订单对象填充订单项
+     1.4 获取第一个订单项对应的产品,因为在评价页面需要显示一个产品图片，那么就使用这第一个产品的图片了
+     1.5 获取这个产品的评价集合
+     1.6 为产品设置评价数量和销量
+     1.7 把产品，订单和评价集合放在request上
+     1.8 服务端跳转到 review.jsp*/
+    @RequestMapping("forereview")
+    public String review(int oid,Model model){
+        Order o=orderService.get(oid);
+        orderItemService.fill(o);
+        Product p=o.getOrderItems().get(0).getProduct();
+        List<Review> rs=reviewService.list(p.getId());
+        productService.setSaleAndReviewNumber(p);
+        model.addAttribute("p",p);
+        model.addAttribute("o",o);
+        model.addAttribute("reviews",rs);
+        return "fore/review";
+    }
+    /**1. ForeController.doreview()
+     1.1 获取参数oid
+     1.2 根据oid获取订单对象o
+     1.3 修改订单对象状态
+     1.4 更新订单对象到数据库
+     1.5 获取参数pid
+     1.6 根据pid获取产品对象
+     1.7 获取参数content (评价信息)
+     1.8 对评价信息进行转义，道理同注册ForeController.register()
+     1.9 从session中获取当前用户
+     1.10 创建评价对象review
+     1.11 为评价对象review设置 评价信息，产品，时间，用户
+     1.12 增加到数据库
+     1.13.客户端跳转到/forereview： 评价产品页面，并带上参数showonly=true*/
+    @RequestMapping("foredoreview")
+    public String doreview(int oid,int pid,String content,HttpSession session){
+        Order o=orderService.get(oid);
+        o.setStatus(OrderService.finish);
+        orderService.update(o);
+        Product p=productService.get(pid);
+        Review review=new Review();
+        review.setContent(HtmlUtils.htmlEscape(content));
+        User user=(User) session.getAttribute("user");
+        review.setUser(user);
+        review.setCreateDate(new Date());
+        review.setPid(pid);
+        review.setUid(user.getId());
+        reviewService.add(review);
+        //不需要model，因为review()方法中会为model设置属性
+        return "redirect:forereview?showonly=true&oid="+oid;
+
     }
 }

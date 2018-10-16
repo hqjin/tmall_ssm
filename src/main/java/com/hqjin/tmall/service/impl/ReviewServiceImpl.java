@@ -38,6 +38,8 @@ public class ReviewServiceImpl implements ReviewService{
         example.createCriteria().andPidEqualTo(pid);
         example.setOrderByClause("id desc");
         List<Review> rs=reviewMapper.selectByExample(example);
+        //犯错：这里忘记给Review设置User了。
+        setUser(rs);
         return rs;
     }
 

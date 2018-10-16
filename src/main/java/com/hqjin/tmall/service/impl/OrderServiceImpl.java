@@ -65,4 +65,13 @@ public class OrderServiceImpl implements OrderService{
         }
         return totalPrice;
     }
+
+    @Override
+    public List<Order> list(int uid, String excluedeStatus) {
+        OrderExample example=new OrderExample();
+        example.createCriteria().andUidEqualTo(uid).andStatusNotEqualTo(excluedeStatus);
+        example.setOrderByClause("id desc");
+        List<Order> os=orderMapper.selectByExample(example);
+        return os;
+    }
 }

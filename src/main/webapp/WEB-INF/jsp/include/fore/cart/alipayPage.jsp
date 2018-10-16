@@ -22,6 +22,7 @@
         <img class="aliPayImg" src="img/site/alipay2wei.png">
     </div>
     <div>
+        <!--alipay又把自己URI的参数传给了forepayed的URI-->
         <a href="forepayed?oid=${param.oid}&total=${param.total}"><button class="confirmPay">确认付款</button> </a>
     </div>
 </div>

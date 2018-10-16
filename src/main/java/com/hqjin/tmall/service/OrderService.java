@@ -18,4 +18,5 @@ public interface OrderService {
     Order get(int id);
     List<Order> list();
     float add(Order o, List<OrderItem> ois);
+    List<Order> list(int uid,String excluedeStatus);
 }
